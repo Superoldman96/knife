@@ -87,7 +87,7 @@ public class FindUrlAction implements ActionListener {
 		return result;
 	}
 
-	public static void doSendRequest(List<String> full_urls, String refererToUse) {
+	public static void doSendRequest(List<String> full_urls, HashMap<String, String> headers) {
 		try {
 			BlockingQueue<RequestTask> inputQueue = new LinkedBlockingQueue<>();
 
@@ -106,8 +106,6 @@ public class FindUrlAction implements ActionListener {
 			} catch (Exception e) {
 				e.printStackTrace(BurpExtender.getStderr());
 			}
-			HashMap<String, String> headers = new HashMap<String, String>();
-			headers.put("Referer", refererToUse);
 			doRequest(inputQueue, headers);
 		} catch (Exception e1) {
 			e1.printStackTrace(BurpExtender.getStderr());
@@ -140,7 +138,9 @@ public class FindUrlAction implements ActionListener {
 				urls = choseURLPath(urls);
 				if (urls.size() == 0) return;
 				List<String> full_urls = buildUrls(baseurl, urls);
-				doSendRequest(full_urls, originUrl);
+				HashMap<String, String> headers = new HashMap<>();
+				headers.put("Referer", originUrl);
+				doSendRequest(full_urls, headers);
 			}
 		};
 		new Thread(requestRunner).start();

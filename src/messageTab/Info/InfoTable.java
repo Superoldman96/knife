@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -222,7 +223,9 @@ public class InfoTable extends JTable {
 	public void doRequestUrl(List<String> urlsToRequest) {
 		String targetBaseUrl = getOrFindBaseUrl();
 		List<String> full_urls = FindUrlAction.buildUrls(targetBaseUrl, urlsToRequest);
-		FindUrlAction.doSendRequest(full_urls, targetBaseUrl);
+		HashMap<String, String> headers = new HashMap<>();
+		headers.put("Referer", targetBaseUrl);
+		FindUrlAction.doSendRequest(full_urls, headers);
 	}
 
 	public void doOpenUrlInBrowser(List<String> urlsOrPathsToRequest) {
